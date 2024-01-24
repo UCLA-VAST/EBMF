@@ -97,7 +97,7 @@ print(trivial_ebmf)
 ```
 
 The returned result is a `list` of `dict`s.
-```bash
+```plain
 [
     {'rows': [0, 2, 4], 'cols': [0, 2]},
     {'rows': [1, 3, 4], 'cols': [1]},
@@ -119,7 +119,7 @@ RectangularPartition(mat, trivial_ebmf).visualize()
 ```
 
 The output should read
-```bash
+```plain
 -------------------original matrix-------------------
 [[1, 0, 1, 1, 0, 0],
  [0, 1, 0, 0, 1, 1],
@@ -186,7 +186,7 @@ Suppose the binary rank of this solution is *r*, the SMT will initiates with *r*
 If this argument is not provided, the SMT would start with the solution returned by `row_packing_partition(mat, 10)`. 
 The third argument `if_print` is also default to `False`.
 In this example, apart from the `RectangularPartition` printout above, there will be
-```bash
+```plain
 ------------------------------------------------------
 -------------------trying rank=4 with SAT
 -------------------rank=4 UNSAT
