@@ -206,6 +206,44 @@ print(fooling_set(mat, 6))
 The printout should be `True` and then `False`.
 This means the matrix has a size-5 fooling set but not size-6.
 
+## Data in the DATE'24 paper
+
+In the `date24` branch, some additional files are provided: `evaluations.py` is used to produce the results; `benchmark_gen.py` is used to generate the benchmarks used; `results/*_partition.json` contain the derived EBMFs; other JSONs in `results/` contains the benchmarks themselves; other text files in `results/` are run results.
+
+Running `python benchmark_gen.py` will produce some JSON files containing benchmarks, but there is randomness in the process, so these will be different from the those in `results/`.
+
+The lines in the text files are in the form of 
+```plain
+id, density, linear rank, best, packing, trivial, runtime
+```
+where `id` is the index of the matrix in the corresponding benchmark set, `linear rank` is the linear rank of the matrix, `best` is the best binary rank (this can be from row packing or the SMT-base method depending on flags of `evaluations.py`), `packing` is the binary rank by row packing, `trivial` is the binary rank by the trivial heuristic, `runtime` is the runtime of the method producing `best`.
+
+## Reproducing the results in the DATE'24 paper
+
+The set of results ending with `_100` and the `_partition.json` are produced by the following command.
+(This is because the row packing results in the paper are using 100 trials of row packing.)
+```bash
+python evaluations.py BENCHMARK --smt --partition
+```
+`BENCHMARK` can be `results/benchmark_gap_10x10_4.json`.
+With the above setting, the `best` result is by the SMT-based method, and the `packing` result is by 100 trials of row packing.
+Note that the SMT runtime can vary because of randomness in the solver and hardware.
+We used a server with an AMD EPYC 7V13 CPU and 512 GB RAM.
+
+The other files ending in `_1`, `_10`, and `_1000` are produced by
+```bash
+python evaluations.py BENCHMARK --trials N --suffix N
+```
+with `N` being 1, 10, and 1000.
+In this case, the `best` result is by `N` trials of row packing, and the `packing` result is by 1 trial of row packing.
+
+More specifically, `evaluations.py` has some options: 
+- `--smt`: if specified, use SMT to produce `best`; otherwise, use row packing.
+- `--partition`: if specified, store the `best` EBMF to a `*_partition.json`.
+- `--suffix`: append the following string to the filename of the result text file.
+- `--trials`: use the following number of trials to produce the `packing` result if `--smt` is specified; or to produce the `best` result if `--smt` is not specified.
+
+
 ## Acknowledgements
 The DATE'24 paper is funded by NSF grant 442511-CJ-22291.
 The authors would like to thank D. Bluvstein and H. Zhou for conversations on neutral atom arrays, and [a post on TCS Stack Exchange](https://cstheory.stackexchange.com/questions/34838/binary-rank-of-binary-matrix) about binary rank by D. Issac, R. Kothari, and S. Nikolov.
